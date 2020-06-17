@@ -1,24 +1,46 @@
-#include <iostream>
-#include <opencv2/highgui/highgui.hpp>
-#include <opencv2/imgproc/imgproc.hpp>
+#include "common.hpp"
 using namespace cv;
 using namespace std;
 
+
 int main()
 {
-    VideoCapture stream1(0); //0 is the id of video device.0 if you have only one camera.
+    int i = 0;
+    bool running = true;
+    bool aKeyPressed = false;
 
-    if (!stream1.isOpened()) { //check if video device has been initialised
-        cout << "cannot open camera";
-    }
+    Webcam webcam("Webcam", 0);
 
-    //unconditional loop
-    while (true) {
-        Mat cameraFrame;
-        stream1.read(cameraFrame);
-        imshow("cam", cameraFrame);
-        if (waitKey(30) >= 0)
+    while (running) {
+        webcam.update();
+        auto key = waitKey(30);
+
+        switch (key) {
+        case static_cast<int>('a'):
+            aKeyPressed = true;
+            cout << "KEY A" << endl;
             break;
+        case static_cast<int>('s'):
+            aKeyPressed = false;
+            cout << "KEY S" << endl;
+            break;
+        case static_cast<int>('x'):
+            running = false;
+            break;
+        default:        
+            auto gesture = webcam.getGesture(0);
+            if(gesture.size() != 0 && i < gesture.size())
+                webcam.showGesture(0, i);
+            if(i < gesture.size())
+                i++;
+            else
+                i = 0;
+            break;
+        }
+
+        if (aKeyPressed)
+            webcam.capture();
     }
+
     return 0;
 }
