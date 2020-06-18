@@ -58,5 +58,5 @@ void Webcam::record()
 }
 
 void Webcam::showGesture(int number, int index) {
-    imshow("Gesture", gestures[number].getFrame(index));
+    imshow("Gesture" + number, gestures[number].getFrame(index));
 }
