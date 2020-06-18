@@ -58,5 +58,9 @@ void Webcam::record()
 }
 
 void Webcam::showGesture(int number, int index) {
-    imshow("Gesture" + number, gestures[number].getFrame(index));
+    for (int i = 1; i <= number; i++) {
+        std::string title = "Gesture";
+        title.append(std::to_string(i));
+        imshow(title, gestures[i].getFrame(index));
+    }
 }
