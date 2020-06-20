@@ -17,8 +17,10 @@ public:
     cv::Mat getFrame(unsigned int index);
 
     std::vector<cv::Mat> getGesture();
-    void push_frame(cv::Mat frame);
+    void pushFrame(cv::Mat frame);
     int getSize();
+
+    void detectEdges(int index);
 private:
     std::vector<cv::Mat> gesture;
 };

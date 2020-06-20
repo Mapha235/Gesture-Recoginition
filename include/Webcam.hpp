@@ -24,6 +24,7 @@ public:
     void update();
     void record();
     void showGesture(int number, int index);
+
 private:
     std::string title;
     cv::VideoCapture stream;
