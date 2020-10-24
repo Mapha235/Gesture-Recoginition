@@ -25,10 +25,17 @@ public:
     void record();
     void showGesture(int number, int index);
 
+    
+    void recordBg();
+    /* Computes the Background  */
+    void generateBgModel();
+    void showBgModel();
+
 private:
     std::string title;
     cv::VideoCapture stream;
-    cv::Mat frame;
-    Gesture temp;
+    cv::Mat current_frame;
+    Gesture current_gesture;
+    cv::Mat bg_model;
     std::vector<Gesture> gestures;
 };

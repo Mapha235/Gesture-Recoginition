@@ -20,9 +20,9 @@ Webcam::~Webcam()
 
 void Webcam::addGesture()
 {
-    temp.detectEdges(0);
-    gestures.push_back(temp);
-    temp = Gesture();
+    // current_gesture.detectEdges();
+    gestures.push_back(current_gesture);
+    current_gesture = Gesture();
 }
 
 Gesture Webcam::getGesture(int number)
@@ -31,8 +31,8 @@ Gesture Webcam::getGesture(int number)
         return gestures.at(number);
 
     } catch (const std::exception& e) {
-        std::vector<cv::Mat> temp = { frame };
-        return Gesture(temp);
+        std::vector<cv::Mat> current_gesture = { current_frame };
+        return Gesture(current_gesture);
     }
 }
 
@@ -43,19 +43,19 @@ std::vector<Gesture> Webcam::getGestures()
 
 cv::Mat Webcam::getFrame()
 {
-    return frame;
+    return current_frame.clone();
 }
 
 void Webcam::update()
 {
-    stream >> frame;
-    imshow(title, frame);
+    stream >> current_frame;
+    imshow(title, current_frame);
 }
 
 void Webcam::record()
 {
-    temp.pushFrame(frame);
-    // gestures.at(number).push_frame(frame);
+    current_gesture.pushFrame(current_frame);
+    // gestures.at(number).push_frame(current_frame);
 }
 
 void Webcam::showGesture(int number, int index)
@@ -69,6 +69,28 @@ void Webcam::showGesture(int number, int index)
         if (index < current.getSize()) {
             // current.detectEdges(index);
             imshow(title, current.getFrame(index));
+        }
+    }
+}
+
+void Webcam::recordBg(){
+    
+}
+
+void Webcam::showBgModel(){
+    imshow("BG Model", bg_model);
+}
+
+void Webcam::generateBgModel(){
+    Gesture bg_video = gestures.at(1);
+    std::vector<unsigned char> mean;
+    for(int frame_nr = 0; frame_nr < bg_video.getSize(); frame_nr++){
+        auto frame = bg_video.getFrame(frame_nr);
+
+        for(int row = 0; row < frame.rows; row++){
+            for(int col = 0; col < frame.cols; col++){
+                mean.push_back(frame.at<unsigned char>(row,col));
+            }
         }
     }
 }

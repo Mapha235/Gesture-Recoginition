@@ -1,5 +1,11 @@
 #include "Gesture.hpp"
 #include <iostream>
+#include <opencv2/imgcodecs.hpp>
+#include <opencv2/imgproc.hpp>
+#include <opencv2/videoio.hpp>
+#include <opencv2/highgui.hpp>
+#include <opencv2/video.hpp>
+
 
 Gesture::Gesture() {}
 
@@ -39,12 +45,24 @@ int Gesture::getSize()
     return gesture.size();
 }
 
-void Gesture::detectEdges(int index)
+void Gesture::saveBackground(cv::Mat frame)
 {
+    bg = frame;
+}
+
+void Gesture::detectEdges()
+{
+    // for (auto it = gesture.begin(); it != gesture.end(); ++it) {
+    //     cv::cvtColor(*it, *it, cv::COLOR_BGR2GRAY);
+    //     blur(*it, *it, cv::Size(3, 3));
+    //     double threshold = 10;
+    //     cv::Canny(*it, *it, threshold, 3 * threshold);
+    // }
+
+
+    cv::Ptr<cv::BackgroundSubtractor> pBackSub = cv::createBackgroundSubtractorKNN();
     for (auto it = gesture.begin(); it != gesture.end(); ++it) {
         cv::cvtColor(*it, *it, cv::COLOR_BGR2GRAY);
-        blur(*it, *it, cv::Size(3, 3));
-        double threshold = 10;
-        cv::Canny(*it, *it, threshold, 3 * threshold);
+        pBackSub->apply(*it, *it, 0.2);
     }
 }
